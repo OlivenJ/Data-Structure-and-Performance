@@ -1,6 +1,6 @@
 package document;
 
-import java.util.List;
+import java.util.*;
 
 /** 
  * A naive implementation of the Document abstract class. 
@@ -36,7 +36,15 @@ public class BasicDocument extends Document
 	{
 		//TODO: Implement this method in week 2 according to the comments above.  
 		// See the Module 2 support videos if you need help.
-	    return 0;
+		List<String> wordList = new ArrayList<String>();
+		
+		String pattern = "[A-Z|a-z]+";
+		wordList = this.getTokens(pattern);
+		
+		
+	    return wordList.size();
+	    
+	    
 	}
 	
 	/**
@@ -56,7 +64,13 @@ public class BasicDocument extends Document
 	{
 	    //TODO: Implement this method.  See the Module 2 support videos 
         // if you need help.
-        return 0;
+		
+		List<String> sentList = new ArrayList<String>();
+		
+		String pattern = "[^.!?]+";
+		sentList = this.getTokens(pattern);
+		
+        return sentList.size();
 	}
 	
 	/**
@@ -81,7 +95,20 @@ public class BasicDocument extends Document
 		// expression for the syllable counting.  We recommend you implement 
 		// the helper function countSyllables in Document.java using a loop, 
 		// and then call it here on each word.
-        return 0;
+		
+		
+		int count = 0;
+		List<String> wordList = new ArrayList<String>();
+		
+		String pattern = "[A-Z|a-z]+";
+		wordList = this.getTokens(pattern);
+		
+		for(String w: wordList) {
+			count += countSyllables(w);
+			
+		}
+		
+        return count;
 	}
 	
 	
@@ -95,6 +122,8 @@ public class BasicDocument extends Document
 		 * in the string, respectively.  You can use these examples to help clarify 
 		 * your understanding of how to count syllables, words, and sentences.
 		 */
+		
+		/*
 		testCase(new BasicDocument("This is a test.  How many???  "
 		        + "Senteeeeeeeeeences are here... there should be 5!  Right?"),
 				16, 13, 5);
@@ -111,6 +140,12 @@ public class BasicDocument extends Document
 		testCase(new BasicDocument("Sentences?!"), 3, 1, 1);
 		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
 		         32, 15, 1);
+		*/
+		
+		BasicDocument db = new BasicDocument("one (1), two (2), three (3)");
+		
+		System.out.println(db.getTokens("[a-z]+|[()0-9]+"));
+		
 	}
 	
 }
