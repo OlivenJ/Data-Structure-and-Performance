@@ -123,7 +123,7 @@ public class BasicDocument extends Document
 		 * your understanding of how to count syllables, words, and sentences.
 		 */
 		
-		/*
+		
 		testCase(new BasicDocument("This is a test.  How many???  "
 		        + "Senteeeeeeeeeences are here... there should be 5!  Right?"),
 				16, 13, 5);
@@ -140,11 +140,8 @@ public class BasicDocument extends Document
 		testCase(new BasicDocument("Sentences?!"), 3, 1, 1);
 		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
 		         32, 15, 1);
-		*/
 		
-		BasicDocument db = new BasicDocument("one (1), two (2), three (3)");
 		
-		System.out.println(db.getTokens("[a-z]+|[()0-9]+"));
 		
 	}
 	
