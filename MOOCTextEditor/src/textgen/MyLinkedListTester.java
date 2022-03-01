@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
+
 /**
  * @author UC San Diego MOOC team
  *
@@ -27,7 +28,7 @@ public class MyLinkedListTester {
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception { //Set up the test candidates
 		// Feel free to use these lists, or add your own
 	    shortList = new MyLinkedList<String>();
 		shortList.add("A");
@@ -80,6 +81,7 @@ public class MyLinkedListTester {
 		catch (IndexOutOfBoundsException e) {
 		
 		}
+		
 		// test longer list contents
 		for(int i = 0; i<LONG_LIST_LENGTH; i++ ) {
 			assertEquals("Check "+i+ " element", (Integer)i, longerList.get(i));
@@ -109,12 +111,41 @@ public class MyLinkedListTester {
 	@Test
 	public void testRemove()
 	{
-		int a = list1.remove(0);
-		assertEquals("Remove: check a is correct ", 65, a);
-		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
-		assertEquals("Remove: check size is correct ", 2, list1.size());
+		//int a = list1.remove(0);
+		//assertEquals("Remove: check a is correct ", 65, a);
+		//assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
+		//assertEquals("Remove: check size is correct ", 2, list1.size());
 		
+		
+		
+		//int b = list1.remove(2);
+		//assertEquals("Remove: check a is correct ", 42, b);
+		//assertEquals("Remove: check last element is correct ", (Integer)21, list1.get(1));
+		//assertEquals("Remove: check size is correct ", 2, list1.size());
+		
+		
+		int c = list1.remove(1);
+		
+		assertEquals("Remove: check a is correct ", 21, c);
+		assertEquals("Remove: check last element is correct ", (Integer)42, list1.get(1));
+		assertEquals("Remove: check size is correct ", 2, list1.size());
 		// TODO: Add more tests here
+		
+		try {
+			list1.remove(11);
+			fail("Upper Bound Problem");
+		}
+			catch(IndexOutOfBoundsException e) {
+				
+		}
+		
+		try {
+			list1.remove(-1);
+			fail("Lower Bound Problem");
+		}
+		catch(IndexOutOfBoundsException e){
+		}
+		
 	}
 	
 	/** Test adding an element into the end of the list, specifically
@@ -124,7 +155,12 @@ public class MyLinkedListTester {
 	public void testAddEnd()
 	{
         // TODO: implement this test
-		
+		try {
+			list1.add(null);
+			fail("Not accepted value");
+		}
+		catch(NullPointerException e){
+		}
 	}
 
 	
@@ -132,7 +168,15 @@ public class MyLinkedListTester {
 	@Test
 	public void testSize()
 	{
+		list1.add(12);
+		list1.add(0, 22);
+		assertEquals("Size after add",5, list1.size() );
 		// TODO: implement this test
+		
+		list1.remove(0);
+		list1.remove(0);
+		list1.remove(0);
+		assertEquals("Size after remove", 2, list1.size());
 	}
 
 	
@@ -145,13 +189,75 @@ public class MyLinkedListTester {
 	public void testAddAtIndex()
 	{
         // TODO: implement this test
+		shortList.add(0,"C");
+		assertEquals("Check first", "C", shortList.get(0));
 		
+		longerList.add(7,100);
+		assertEquals("Check first", (Integer) 100, longerList.get(7));
+		assertEquals("Check first", (Integer) 0, longerList.get(0));
+		
+		list1.add(1, 11);
+		assertEquals("Check first", (Integer) 11, list1.get(1));
+		assertEquals("Check first", (Integer) 21, list1.get(2));
+		
+		
+		try {
+			list1.add(11, 12);
+			fail("Upper Bound Problem");
+		}
+			catch(IndexOutOfBoundsException e) {
+				
+		}
+		
+		try {
+			list1.add(-1, 24);
+			fail("Lower Bound Problem");
+		}
+		catch(IndexOutOfBoundsException e){
+		}
+		
+		try {
+			list1.add(0, null);
+			fail("Not accepted value");
+		}
+		catch(NullPointerException e){
+		}
 	}
 	
 	/** Test setting an element in the list */
 	@Test
 	public void testSet()
 	{
+		
+		int c = list1.set(0, 22);
+		
+		assertEquals("Remove: check a is correct ", 65, c);
+		assertEquals("Remove: check last element is correct ", (Integer)22, list1.get(0));
+		//assertEquals("Remove: check size is correct ", 3, list1.size());
+		
+		try {
+			list1.set(0, null);
+			fail("Not accepted value");
+		}
+		catch(NullPointerException e){
+		}
+		
+		try {
+			list1.set(11, 12);
+			fail("Upper Bound Problem");
+		}
+			catch(IndexOutOfBoundsException e) {
+				
+		}
+		
+		try {
+			list1.set(-1, 24);
+			fail("Lower Bound Problem");
+		}
+		catch(IndexOutOfBoundsException e){
+		}
+			
+		}
 	    // TODO: implement this test
 	    
 	}
@@ -159,4 +265,6 @@ public class MyLinkedListTester {
 	
 	// TODO: Optionally add more test methods.
 	
-}
+	
+	
+
