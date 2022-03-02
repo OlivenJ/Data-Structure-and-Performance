@@ -39,8 +39,40 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public boolean addWord(String word)
 	{
+		final String entry = word;
+		
+		word = word.toLowerCase();
+		int limit = word.length();
+		
 	    //TODO: Implement this method.
+		
+			char firChar = word.charAt(0);
+			char nextChar = word.charAt(1);
+			String firString = word.substring(0,1);
+			
+			if(root.getChildren().containsKey(firChar)) {
+				
+				recursion(word, entry);
+				
+			}else {
+				
+				root.insert(firChar);
+				TrieNode firNode = new TrieNode(firString);
+				firNode.insert(nextChar);
+			}
+			
+			
+			
+			
+			
+		
+		
 	    return false;
+	}
+	
+	private void recursion(String word, String entry) {
+		
+		
 	}
 	
 	/** 

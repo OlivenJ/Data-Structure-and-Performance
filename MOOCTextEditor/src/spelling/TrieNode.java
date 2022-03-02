@@ -39,6 +39,11 @@ class TrieNode {
 		return children.get(c);
 	}
 	
+	public HashMap<Character, TrieNode> getChildren() {
+		
+		return children;
+	}
+	
 	/** Inserts this character at this node.
 	 * Returns the newly created node, if c wasn't already
 	 * in the trie.  If it was, it does not modify the trie
