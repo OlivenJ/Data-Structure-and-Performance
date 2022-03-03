@@ -1,10 +1,7 @@
 package spelling;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
+
 
 /** 
  * An trie data structure that implements the Dictionary and the AutoComplete ADT
@@ -39,41 +36,52 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public boolean addWord(String word)
 	{
-		final String entry = word;
 		
+		//final String entry = word;
 		word = word.toLowerCase();
 		int limit = word.length();
 		
 	    //TODO: Implement this method.
-		
-			char firChar = word.charAt(0);
-			char nextChar = word.charAt(1);
-			String firString = word.substring(0,1);
-			
-			if(root.getChildren().containsKey(firChar)) {
-				
-				recursion(word, entry);
-				
-			}else {
-				
-				root.insert(firChar);
-				TrieNode firNode = new TrieNode(firString);
-				firNode.insert(nextChar);
-			}
-			
-			
-			
-			
-			
-		
+	    TrieNode currNode = root;
+		for(int i = 0; i < limit; i++) {
+			char[] charList = word.toCharArray();
+			char currentChar = word.charAt(i);
+
+				//if(currNode.getChildren().containsKey(currentChar)) {
+				  if(currNode.getChildren().containsKey(charList[i])) {
+					
+					if(i == limit - 1 && currNode.getChild(charList[i]).endsWord() == false) { //add getchild
+						currNode.getChild(charList[i]).setText(word); // add getchild
+						currNode.getChild(charList[i]).setEndsWord(true); //add getchild
+						size ++;
+						return true;
+					}else if(i == limit - 1 && currNode.getChild(charList[i]).endsWord() == true ) {
+						return false; 
+					}else {
+					//currNode = currNode.getChild(currentChar);
+					currNode = currNode.getChild(charList[i]);}
+				//}else if(!currNode.getChildren().containsKey(currentChar)) {
+				}else if(!currNode.getChildren().containsKey(charList[i])) {
+					
+					//currNode.insert(currentChar);
+					currNode.insert(charList[i]);
+					if(i == limit - 1) {
+						currNode.getChild(charList[i]).setText(word);//add getChild 
+						currNode.getChild(charList[i]).setEndsWord(true);// add getChild
+						size ++;
+						return true;
+					}else {
+					//currNode = currNode.getChild(currentChar);
+					currNode = currNode.getChild(charList[i]);
+					}
+				}
+		}
 		
 	    return false;
 	}
 	
-	private void recursion(String word, String entry) {
-		
-		
-	}
+	
+
 	
 	/** 
 	 * Return the number of words in the dictionary.  This is NOT necessarily the same
@@ -82,7 +90,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
@@ -91,7 +99,33 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	@Override
 	public boolean isWord(String s) 
 	{
+		s = s.toLowerCase();
+		int limit = s.length();
 	    // TODO: Implement this method
+		TrieNode currNode = root;
+		
+		for(int i = 0; i < limit; i ++) {
+			char currChar = s.charAt(i);
+			if(currNode.getChildren().containsKey(currChar)) {
+				if(i == limit - 1 && currNode.getChild(currChar).getText().equals(s) ) {//add getChild
+					 
+					return true;
+					
+				}//else if(i == limit - 1 && currNode.getText()!= s) {
+				//	return false;
+					
+				//}
+				else {
+				currNode = currNode.getChild(currChar);}
+				
+			}else if(!currNode.getChildren().containsKey(currChar)) {
+				return false;
+				
+			}
+			
+			
+		}
+		
 		return false;
 	}
 
@@ -118,14 +152,58 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
      */@Override
      public List<String> predictCompletions(String prefix, int numCompletions) 
      {
+    	 prefix = prefix.toLowerCase();
+    	 List<String> answerList = new ArrayList<String>();
+    	 TrieNode stem = new TrieNode();
     	 // TODO: Implement this method
     	 // This method should implement the following algorithm:
     	 // 1. Find the stem in the trie.  If the stem does not appear in the trie, return an
     	 //    empty list
+    	 TrieNode currNode = root;
+    	 char[] charList = prefix.toCharArray();
+    	 int prefixLength = prefix.length();
+    	 
+    	 for(int i = 0; i<prefixLength; i++) {
+    		 if(currNode.getChildren().containsKey(charList[i])) {
+    			 if(i == prefixLength - 1) {
+    				 stem = currNode.getChild(charList[i]); //Stem is the node represent the prefix
+    				 //stem = currNode;
+    				 break;
+    			 }
+    			 currNode = currNode.getChild(charList[i]);
+    		 }else {
+    			 return answerList;
+    		 }
+    		 
+    	 }
+    	 
     	 // 2. Once the stem is found, perform a breadth first search to generate completions
     	 //    using the following algorithm:
     	 //    Create a queue (LinkedList) and add the node that completes the stem to the back
     	 //       of the list.
+    	 LinkedList<TrieNode> answerQueue = new LinkedList<TrieNode>();
+    	 //answerQueue.add(stem);
+    	 for(char c: stem.getValidNextCharacters()) {
+    			 answerQueue.add(stem.getChild(c));
+    	 }
+    	 
+    	 
+    	 while(answerList.size() <numCompletions && answerQueue.size() != 0) {
+	    	 TrieNode answerNode = answerQueue.poll();
+	    	 if(answerNode.endsWord()) {
+	    		 answerList.add(answerNode.getText());
+	    	 }
+	    	 for(char c:answerNode.getValidNextCharacters()) {
+	    		 answerQueue.add(answerNode.getChild(c));
+	    		 
+	    	 	}
+    	 }
+    	//while(answerList.size() < numCompletions) {
+    		
+       		 
+       	 
+    	 //}
+    	 
     	 //    Create a list of completions to return (initially empty)
     	 //    While the queue is not empty and you don't have enough completions:
     	 //       remove the first Node from the queue
@@ -133,7 +211,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
     	 
-         return null;
+         return answerList;
      }
 
  	// For debugging
@@ -157,6 +235,45 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
  		}
  	}
  	
-
-	
+ 	
+ 	public static void main(String[] args) {
+ 		
+ 		AutoCompleteDictionaryTrie emptyDict = new AutoCompleteDictionaryTrie();
+ 		AutoCompleteDictionaryTrie smallDict = new AutoCompleteDictionaryTrie();
+ 		
+ 		smallDict.addWord("Hello");
+		smallDict.addWord("HElLo");
+		smallDict.addWord("hey");
+		smallDict.addWord("head");
+		smallDict.addWord("helq");
+		smallDict.addWord("helt");
+		smallDict.addWord("help");
+		smallDict.addWord("hecq");
+	    smallDict.addWord("heck");
+		smallDict.addWord("he");
+		smallDict.addWord("hem");
+		
+		smallDict.addWord("hot");
+		smallDict.addWord("a");
+		smallDict.addWord("subsequent");
+		
+		emptyDict.addWord("hellow");
+		emptyDict.addWord("XYZAbC");
+ 		
+ 	
+		System.out.println(emptyDict.size());
+	    System.out.println(emptyDict.isWord("xyzabc"));
+		System.out.println(smallDict.isWord("Hell"));
+		smallDict.printTree();
+		
+		List<String> testResult =  smallDict.predictCompletions("he", 1);
+		
+		//for(String s: testResult) {
+			System.out.println(testResult);
+		//}
+		
+ 		
+ 	}
+ 	
+ 	 
 }

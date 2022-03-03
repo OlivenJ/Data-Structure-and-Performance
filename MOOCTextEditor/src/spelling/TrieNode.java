@@ -25,7 +25,7 @@ class TrieNode {
 	public TrieNode(String text)
 	{
 		this();
-		this.text = text;
+		//this.text = text;
 	}
 	
 	/** Return the TrieNode that is the child when you follow the 
@@ -38,6 +38,8 @@ class TrieNode {
 	{
 		return children.get(c);
 	}
+	
+	
 	
 	public HashMap<Character, TrieNode> getChildren() {
 		
@@ -73,6 +75,11 @@ class TrieNode {
 	public void setEndsWord(boolean b)
 	{
 		isWord = b;
+	}
+	
+	public void setText(String word) {
+		
+		this.text = word;
 	}
 	
 	/** Return whether or not this node ends a word in the trie. */
